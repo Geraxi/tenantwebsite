@@ -1,0 +1,78 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 1rem;
+  --brand-blue: 35 87 217;
+  --brand-red: 226 74 74;
+  --soft-bg: 248 249 251;
+  --text-dark: 26 26 26;
+  --muted-text: 90 94 108;
+
+  --background: rgb(var(--soft-bg));
+  --foreground: rgb(var(--text-dark));
+  --card: rgb(255 255 255);
+  --card-foreground: rgb(var(--text-dark));
+  --popover: rgb(255 255 255);
+  --popover-foreground: rgb(var(--text-dark));
+  --primary: rgb(var(--brand-blue));
+  --primary-foreground: rgb(255 255 255);
+  --secondary: rgb(231 234 242);
+  --secondary-foreground: rgb(var(--text-dark));
+  --muted: rgb(235 238 244);
+  --muted-foreground: rgb(var(--muted-text));
+  --accent: rgb(var(--brand-red));
+  --accent-foreground: rgb(255 255 255);
+  --destructive: rgb(var(--brand-red));
+  --border: rgb(228 232 240);
+  --input: rgb(228 232 240);
+  --ring: rgb(var(--brand-blue));
+}
+
+.dark {
+  --background: rgb(10 12 16);
+  --foreground: rgb(247 249 253);
+  --card: rgb(18 20 27);
+  --card-foreground: rgb(247 249 253);
+  --popover: rgb(18 20 27);
+  --popover-foreground: rgb(247 249 253);
+  --primary: rgb(99 134 255);
+  --primary-foreground: rgb(10 12 16);
+  --secondary: rgb(34 38 48);
+  --secondary-foreground: rgb(247 249 253);
+  --muted: rgb(34 38 48);
+  --muted-foreground: rgb(167 175 194);
+  --accent: rgb(248 115 115);
+  --accent-foreground: rgb(18 20 27);
+  --destructive: rgb(255 110 110);
+  --border: rgb(56 62 78);
+  --input: rgb(56 62 78);
+  --ring: rgb(99 134 255);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-offset-0;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  ::selection {
+    background-color: rgba(35, 87, 217, 0.15);
+  }
+}
