@@ -40,3 +40,4 @@ declare module 'lucide-react' {
   export const CheckSquare: Icon
   export const File: Icon
 }
+
