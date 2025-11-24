@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
     // For now, we'll create a portal session without a customer ID
     // This requires storing customer_id in agencies table
 
+    const stripe = getStripe()
     const session = await stripe.billingPortal.sessions.create({
       customer: '', // This should be stored in agencies table
       return_url: `${request.nextUrl.origin}/crm/settings`,

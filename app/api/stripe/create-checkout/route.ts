@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { stripe, STRIPE_PLANS } from '@/lib/stripe'
+import { getStripe, STRIPE_PLANS } from '@/lib/stripe'
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Stripe checkout session
+    const stripe = getStripe()
     const session = await stripe.checkout.sessions.create({
       customer_email: user.email || undefined,
       line_items: [

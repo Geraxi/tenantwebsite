@@ -1,13 +1,25 @@
 import Stripe from 'stripe'
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not set')
+// Lazy initialization to avoid build-time errors when env var is missing
+let stripeClient: Stripe | null = null
+
+export function getStripe(): Stripe {
+  if (!stripeClient) {
+    const secret = process.env.STRIPE_SECRET_KEY
+    if (!secret) {
+      throw new Error('STRIPE_SECRET_KEY is not set')
+    }
+    stripeClient = new Stripe(secret, {
+      apiVersion: '2025-11-17.acacia' as any,
+      typescript: true,
+    })
+  }
+  return stripeClient
 }
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-11-17.acacia' as any,
-  typescript: true,
-})
+// Export getter function - call getStripe() in your API routes instead of using stripe directly
+// This prevents module-level initialization during build
+export { getStripe as stripe }
 
 export const STRIPE_PLANS = {
   free: {
