@@ -59,6 +59,7 @@ declare module 'next/navigation' {
   export function usePathname(): any;
   export function useSearchParams(): any;
   export function redirect(url: string): any;
+  export function notFound(): never;
 }
 
 declare module 'next/link' {
@@ -66,13 +67,4 @@ declare module 'next/link' {
   export default Link;
 }
 
-declare module 'lucide-react' {
-  export const Mail: any;
-  export const Lock: any;
-  export const User: any;
-  export const ArrowRight: any;
-  export const Loader2: any;
-  export const Check: any;
-  export const X: any;
-  // Add others as needed
-}
+// lucide-react types are now in types/lucide-react.d.ts
