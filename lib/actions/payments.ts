@@ -136,7 +136,7 @@ export async function getPayments() {
 
   const { data, error } = await supabase
     .from('payments')
-    .select('*, properties(*)')
+    .select('*, properties(*), tenants(*)')
     .eq('agency_id', userData.agency_id)
     .order('due_date', { ascending: false })
 
