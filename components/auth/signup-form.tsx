@@ -86,32 +86,24 @@ export function SignupForm() {
         return
       }
 
-      // If email confirmation is disabled, create user/agency immediately
+      // The database trigger should automatically create user/agency
+      // If email confirmation is required, show success message
       if (signupData.user && !signupData.session) {
         // User created but needs email confirmation
         setSuccess(true)
       } else if (signupData.user && signupData.session) {
         // User created and logged in (email confirmation disabled)
-        // Create user and agency via API
+        // The database trigger should have created user/agency automatically
+        // Try to redirect to dashboard, but if trigger hasn't run yet, 
+        // the middleware will handle it on first access
         try {
-          const response = await fetch('/api/auth/create-user-agency', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              userId: signupData.user.id,
-              email: data.email,
-              fullName: data.fullName,
-            }),
-          })
-          
-          if (response.ok) {
-            router.push('/crm/dashboard')
-            router.refresh()
-          } else {
-            setSuccess(true) // Still show success, user/agency will be created on first login
-          }
-        } catch {
-          setSuccess(true) // Still show success
+          // Wait a moment for trigger to complete
+          await new Promise(resolve => setTimeout(resolve, 1000))
+          router.push('/crm/dashboard')
+          router.refresh()
+        } catch (err) {
+          // If redirect fails, still show success - user can login
+          setSuccess(true)
         }
       } else {
         setSuccess(true)
