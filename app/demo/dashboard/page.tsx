@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Home, Users, DollarSign, CheckCircle2, AlertCircle, Plus, Rocket } from 'lucide-react'
+import { LayoutDashboard, Users, DollarSign, CheckCircle2, AlertCircle, Plus, Rocket } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { RevenueChart } from '@/components/crm/revenue-chart'
@@ -93,7 +93,7 @@ const statsData = [
     value: demoStats.totalProperties.toString(),
     change: `↑${demoStats.propertiesChange}% dal mese scorso`,
     changeType: 'positive' as const,
-      icon: Home,
+      icon: LayoutDashboard,
     iconBg: 'bg-blue-100',
     iconColor: 'text-blue-600',
   },

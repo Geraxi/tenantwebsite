@@ -1,14 +1,14 @@
-import { Home, Users, DollarSign, FileText, UserCheck } from 'lucide-react'
+import { LayoutDashboard, Users, DollarSign, FileText, UserCheck } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const features = [
   {
-    icon: Home,
+    icon: LayoutDashboard,
     title: 'Gestione Affitti',
     description: 'Gestisci tutti i tuoi contratti di affitto in un unico posto. Traccia scadenze, rinnovi e pagamenti mensili con facilità.',
   },
   {
-    icon: Home,
+    icon: LayoutDashboard,
     title: 'Gestione Vendite',
     description: 'Organizza le tue vendite immobiliari. Monitora offerte, contratti e documentazione per ogni proprietà in vendita.',
   },

@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import { Home } from 'lucide-react'
+import { LayoutDashboard } from 'lucide-react'
 
 export function Contact() {
   return (
@@ -22,7 +22,7 @@ export function Contact() {
             </p>
             <Link href="/demo">
               <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all">
-                <Home className="h-5 w-5 mr-2" />
+                <LayoutDashboard className="h-5 w-5 mr-2" />
                 Prova Demo CRM Ora
               </Button>
             </Link>
@@ -33,7 +33,7 @@ export function Contact() {
               <CardHeader>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600">
-                    <Home className="h-5 w-5 text-white" />
+                    <LayoutDashboard className="h-5 w-5 text-white" />
                   </div>
                   <CardTitle className="text-blue-900">Richiedi una Demo Personalizzata</CardTitle>
                 </div>

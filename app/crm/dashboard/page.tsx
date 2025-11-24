@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Home, Users, DollarSign, CheckCircle2, AlertCircle, Plus } from 'lucide-react'
+import { CheckCircle2, AlertCircle, Plus, FileText } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { RevenueChart } from '@/components/crm/revenue-chart'
 import { RecentActivity } from '@/components/crm/recent-activity'
@@ -137,7 +137,7 @@ export default async function DashboardPage() {
       value: stats?.totalProperties.toString() || '0',
       change: stats?.propertiesChange ? `↑${stats.propertiesChange}% dal mese scorso` : 'Nessun cambiamento',
       changeType: (stats?.propertiesChange || 0) > 0 ? 'positive' as const : 'neutral' as const,
-      icon: Home,
+      icon: FileText,
       iconBg: 'bg-blue-100',
       iconColor: 'text-blue-600',
     },
@@ -155,7 +155,7 @@ export default async function DashboardPage() {
       value: `€${(stats?.monthlyRevenue || 0).toLocaleString('it-IT')}`,
       change: stats?.revenueChange ? `↑${stats.revenueChange}% dal mese scorso` : 'Nessun cambiamento',
       changeType: (stats?.revenueChange || 0) > 0 ? 'positive' as const : 'neutral' as const,
-      icon: DollarSign,
+      icon: CheckCircle2,
       iconBg: 'bg-purple-100',
       iconColor: 'text-purple-600',
     },
