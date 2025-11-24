@@ -1,15 +1,17 @@
 // Type declarations for lucide-react to fix TypeScript errors
+// This file augments the lucide-react module to include all icons we use
+
+import { FC, SVGProps } from 'react'
+
+export interface IconProps extends SVGProps<SVGSVGElement> {
+  size?: string | number
+  strokeWidth?: string | number
+  absoluteStrokeWidth?: boolean
+}
+
+export type Icon = FC<IconProps>
+
 declare module 'lucide-react' {
-  import { FC, SVGProps } from 'react'
-  
-  export interface IconProps extends SVGProps<SVGSVGElement> {
-    size?: string | number
-    strokeWidth?: string | number
-    absoluteStrokeWidth?: boolean
-  }
-  
-  export type Icon = FC<IconProps>
-  
   // Export all commonly used icons
   export const Plus: Icon
   export const CheckCircle2: Icon
