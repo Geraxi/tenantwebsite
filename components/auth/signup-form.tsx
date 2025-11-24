@@ -15,17 +15,19 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { createClient } from '@/lib/supabase/client'
 
-const signupSchema = z.object({
+const signupSchemaBase = z.object({
   fullName: z.string().min(2, 'Il nome deve contenere almeno 2 caratteri'),
   email: z.string().email('Inserisci un indirizzo email valido'),
   password: z.string().min(6, 'La password deve contenere almeno 6 caratteri'),
   confirmPassword: z.string().min(6, 'La password deve contenere almeno 6 caratteri'),
-}).refine((data) => data.password === data.confirmPassword, {
+})
+
+type SignupFormValues = z.infer<typeof signupSchemaBase>
+
+const signupSchema = signupSchemaBase.refine((data: SignupFormValues) => data.password === data.confirmPassword, {
   message: 'Le password non corrispondono',
   path: ['confirmPassword'],
 })
-
-type SignupFormValues = z.infer<typeof signupSchema>
 
 export function SignupForm() {
   const [isLoading, setIsLoading] = useState(false)

@@ -12,14 +12,28 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
+// Define types for type safety
+type TaskStatus = 'todo' | 'in_progress' | 'completed'
+type TaskPriority = 'high' | 'medium' | 'low'
+
+interface DemoTask {
+  id: string
+  title: string
+  description: string
+  priority: TaskPriority
+  status: TaskStatus
+  dueDate: string
+  assignedTo: string
+}
+
 // Demo tasks data
-const demoTasks = [
+const demoTasks: DemoTask[] = [
   {
     id: '1',
     title: 'Rinnovo contratto Via Roma 15',
     description: 'Contratto in scadenza a fine mese',
-    priority: 'high' as const,
-    status: 'todo' as const,
+    priority: 'high',
+    status: 'todo',
     dueDate: '2024-11-20',
     assignedTo: 'Marco Bianchi',
   },
@@ -27,8 +41,8 @@ const demoTasks = [
     id: '2',
     title: 'Controllo manutenzione Corso Garibaldi',
     description: 'Verifica impianto di riscaldamento',
-    priority: 'medium' as const,
-    status: 'in_progress' as const,
+    priority: 'medium',
+    status: 'in_progress',
     dueDate: '2024-11-22',
     assignedTo: 'Giulia Neri',
   },
@@ -36,8 +50,8 @@ const demoTasks = [
     id: '3',
     title: 'Raccolta documenti nuovo inquilino',
     description: 'Completare documentazione per Via Manzoni',
-    priority: 'high' as const,
-    status: 'todo' as const,
+    priority: 'high',
+    status: 'todo',
     dueDate: '2024-11-18',
     assignedTo: 'Luca Verdi',
   },
@@ -45,20 +59,20 @@ const demoTasks = [
     id: '4',
     title: 'Revisione canone affitto',
     description: 'Rivedere canone per Piazza Duomo',
-    priority: 'low' as const,
-    status: 'todo' as const,
+    priority: 'low',
+    status: 'todo',
     dueDate: '2024-11-25',
     assignedTo: 'Sara Rossi',
   },
 ]
 
-const priorityLabels = {
+const priorityLabels: Record<TaskPriority, string> = {
   high: 'Alta',
   medium: 'Media',
   low: 'Bassa',
 }
 
-const statusLabels = {
+const statusLabels: Record<TaskStatus, string> = {
   todo: 'Da Fare',
   in_progress: 'In Corso',
   completed: 'Completata',

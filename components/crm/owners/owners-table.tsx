@@ -67,7 +67,7 @@ export function OwnersTable({ owners }: OwnersTableProps) {
                     <Link 
                       href={`/crm/owners/${owner.id}`} 
                       className="hover:underline flex items-center gap-2 text-blue-600 hover:text-blue-800"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e: React.MouseEvent<HTMLAnchorElement>) => e.stopPropagation()}
                     >
                       {ownerName}
                       <FileText className="h-3 w-3 text-muted-foreground" title="Visualizza profilo e documenti" />

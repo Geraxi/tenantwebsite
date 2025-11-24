@@ -69,7 +69,7 @@ export function CostCalculator() {
                       min="1"
                       placeholder="es. 50"
                       value={properties}
-                      onChange={(e) => setProperties(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProperties(e.target.value)}
                       className="mt-2"
                     />
                   </div>
@@ -82,7 +82,7 @@ export function CostCalculator() {
                       step="0.01"
                       placeholder="es. 280"
                       value={currentMonthlyCost}
-                      onChange={(e) => setCurrentMonthlyCost(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrentMonthlyCost(e.target.value)}
                       className="mt-2"
                       required
                     />

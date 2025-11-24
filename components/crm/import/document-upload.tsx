@@ -161,7 +161,8 @@ export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
           // If can't detect, show error or keep as auto
           setError('Impossibile rilevare automaticamente il tipo di documento. Seleziona manualmente il tipo di entità.')
         }
-      } else if (entityType !== 'auto') {
+      } else {
+        // entityType is 'tenant' | 'owner' | 'property' here
         const detectedCategory = detectCategory(selectedFile.name, entityType)
         if (detectedCategory !== 'other') {
           setCategory(detectedCategory)
@@ -304,8 +305,8 @@ export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
           <Label htmlFor="entity-type">Tipo di Entità</Label>
           <Select
             value={entityType}
-            onValueChange={(value) => {
-              setEntityType(value as any)
+            onValueChange={(value: 'tenant' | 'owner' | 'property' | 'auto') => {
+              setEntityType(value)
               setSelectedEntity('')
               setCategory('')
             }}
@@ -339,7 +340,7 @@ export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
                   type="text"
                   placeholder={`Cerca ${entityType === 'tenant' ? 'inquilino' : entityType === 'owner' ? 'proprietario' : 'proprietà'}...`}
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                   className="pl-9"
                   disabled={isUploading}
                 />
@@ -419,7 +420,7 @@ export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
 
         <Button
           onClick={handleUpload}
-          disabled={!file || isUploading || entityType === 'auto' || !selectedEntity || !category || entityType === ''}
+          disabled={!file || isUploading || entityType === 'auto' || !selectedEntity || !category}
           className="w-full"
         >
           {isUploading ? (

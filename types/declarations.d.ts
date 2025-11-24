@@ -1,29 +1,4 @@
-declare module 'react' {
-  export function useState<T = any>(initial?: T | (() => T)): [T, (newState: T | ((prevState: T) => T)) => void];
-  export function useEffect(effect: () => void | (() => void), deps?: any[]): void;
-  export function useContext<T>(context: any): T;
-  export function useReducer<R, I>(reducer: (state: R, action: any) => R, initializerArg: I, initializer?: (arg: I) => R): [R, (action: any) => void];
-  export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: any[]): T;
-  export function useMemo<T>(factory: () => T, deps: any[] | undefined): T;
-  export function useRef<T = any>(initialValue?: T): { current: T };
-  export function useImperativeHandle(ref: any, createHandle: () => any, deps?: any[]): void;
-  export function useLayoutEffect(effect: () => void | (() => void), deps?: any[]): void;
-  export function useDebugValue(value: any, format?: (value: any) => any): void;
-  export const Fragment: any;
-  export const Suspense: any;
-  export const lazy: any;
-  export const memo: any;
-  export const createContext: any;
-  export const forwardRef: any;
-  export type FormEvent<T = any> = any;
-  export type ChangeEvent<T = any> = any;
-  export type ReactNode = any;
-  export type CSSProperties = any;
-  export type ComponentType<P = any> = any;
-
-  const React: any;
-  export default React;
-}
+// React types are provided by @types/react - no need to redeclare
 
 declare module 'react/jsx-runtime' {
   export const jsx: any;
@@ -46,8 +21,17 @@ declare module 'zod' {
 
 declare module 'react-hook-form' {
   export function useForm<T = any>(props?: any): any;
+  export function Controller(props: any): any;
+  export function useFormContext<T = any>(): any;
+  export function useFormState(props?: any): any;
+  export const FormProvider: any;
   export type UseFormReturn<T> = any;
   export type SubmitHandler<T> = any;
+  export type ControllerProps<TFieldValues = any, TName extends Path<TFieldValues> = any> = any;
+  export type FieldPath<T = any> = any;
+  export type FieldValues = any;
+  export type Path<T> = any;
+  export type PathValue<T, P extends Path<T>> = any;
 }
 
 declare module '@hookform/resolvers/zod' {

@@ -7,6 +7,7 @@ export interface IconProps extends SVGProps<SVGSVGElement> {
   size?: string | number
   strokeWidth?: string | number
   absoluteStrokeWidth?: boolean
+  title?: string
 }
 
 export type Icon = FC<IconProps>
@@ -56,4 +57,6 @@ declare module 'lucide-react' {
   export const Rocket: Icon
   export const CheckSquare: Icon
   export const File: Icon
+  export const LogOut: Icon
+  export const LogIn: Icon
 }

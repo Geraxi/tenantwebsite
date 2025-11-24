@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, ChevronLeft, ChevronRight, LayoutDashboard, MapPin, Rocket, User } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight, LayoutDashboard, MapPin, Rocket, User, Home } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -43,7 +43,7 @@ interface PropertiesCarouselProps {
 export function PropertiesCarousel({ properties, isDemo = false }: PropertiesCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isMounted, setIsMounted] = useState(false)
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     setIsMounted(true)
