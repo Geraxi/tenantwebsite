@@ -38,4 +38,3 @@ declare module 'lucide-react' {
   export const File: Icon
   // Add more as needed
 }
-

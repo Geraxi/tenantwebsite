@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-// @ts-ignore - TypeScript definitions are out of sync, but icons exist at runtime
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { getOwners } from '@/lib/actions/owners'
