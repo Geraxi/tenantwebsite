@@ -1,3 +1,4 @@
+// Type declarations for lucide-react to fix TypeScript errors
 declare module 'lucide-react' {
   import { FC, SVGProps } from 'react'
   
@@ -9,7 +10,7 @@ declare module 'lucide-react' {
   
   export type Icon = FC<IconProps>
   
-  // Export all commonly used icons - explicitly declare all icons that might be imported
+  // Export all commonly used icons
   export const Plus: Icon
   export const CheckCircle2: Icon
   export const AlertCircle: Icon
@@ -36,5 +37,4 @@ declare module 'lucide-react' {
   export const Upload: Icon
   export const CheckSquare: Icon
   export const File: Icon
-  // Add more as needed
 }
