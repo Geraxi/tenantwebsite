@@ -82,7 +82,9 @@ export function SignupForm() {
       })
 
       if (error) {
-        setError(error.message)
+        console.error('Supabase signup error:', error)
+        setError(error.message || 'Errore durante la registrazione. Riprova più tardi.')
+        setIsLoading(false)
         return
       }
 
@@ -109,7 +111,11 @@ export function SignupForm() {
         setSuccess(true)
       }
     } catch (err) {
-      setError('Si è verificato un errore durante la registrazione')
+      console.error('Signup error:', err)
+      const errorMessage = err instanceof Error 
+        ? err.message 
+        : 'Si è verificato un errore durante la registrazione. Verifica la connessione e riprova.'
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
