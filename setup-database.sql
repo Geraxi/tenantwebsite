@@ -149,85 +149,74 @@ ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies for agencies
-CREATE POLICY "Users can view their own agency"
-  ON agencies FOR SELECT
-  USING (
-    id IN (
-      SELECT agency_id FROM users WHERE id = auth.uid()
-    )
-  );
+-- Step 1: Create helper function FIRST (before policies use it)
+-- This prevents infinite recursion in RLS policies
+CREATE OR REPLACE FUNCTION public.user_agency_id()
+RETURNS UUID AS $$
+  SELECT agency_id FROM users WHERE id = auth.uid() LIMIT 1;
+$$ LANGUAGE sql SECURITY DEFINER STABLE;
 
-CREATE POLICY "Users can update their own agency"
-  ON agencies FOR UPDATE
-  USING (
-    id IN (
-      SELECT agency_id FROM users WHERE id = auth.uid()
-    )
-  );
+-- Step 2: Drop any existing policies to avoid conflicts
+DROP POLICY IF EXISTS "Users can view their own user record" ON users;
+DROP POLICY IF EXISTS "Users can update their own user record" ON users;
+DROP POLICY IF EXISTS "Users can view their own agency" ON agencies;
+DROP POLICY IF EXISTS "Users can update their own agency" ON agencies;
+DROP POLICY IF EXISTS "Users can manage owners in their agency" ON owners;
+DROP POLICY IF EXISTS "Users can manage properties in their agency" ON properties;
+DROP POLICY IF EXISTS "Users can manage tenants in their agency" ON tenants;
+DROP POLICY IF EXISTS "Users can manage payments in their agency" ON payments;
+DROP POLICY IF EXISTS "Users can manage tasks in their agency" ON tasks;
+DROP POLICY IF EXISTS "Users can manage documents in their agency" ON documents;
 
--- RLS Policies for users
+-- Step 3: Create all RLS policies using the helper function
+
+-- Users table policies (simplified to avoid recursion)
 CREATE POLICY "Users can view their own user record"
   ON users FOR SELECT
-  USING (id = auth.uid() OR agency_id IN (SELECT agency_id FROM users WHERE id = auth.uid()));
+  USING (id = auth.uid());
 
 CREATE POLICY "Users can update their own user record"
   ON users FOR UPDATE
   USING (id = auth.uid());
 
--- RLS Policies for owners
+-- Agencies policies (using the function)
+CREATE POLICY "Users can view their own agency"
+  ON agencies FOR SELECT
+  USING (id = public.user_agency_id());
+
+CREATE POLICY "Users can update their own agency"
+  ON agencies FOR UPDATE
+  USING (id = public.user_agency_id());
+
+-- Owners policy (using the function)
 CREATE POLICY "Users can manage owners in their agency"
   ON owners FOR ALL
-  USING (
-    agency_id IN (
-      SELECT agency_id FROM users WHERE id = auth.uid()
-    )
-  );
+  USING (agency_id = public.user_agency_id());
 
--- RLS Policies for properties
+-- Properties policy (using the function)
 CREATE POLICY "Users can manage properties in their agency"
   ON properties FOR ALL
-  USING (
-    agency_id IN (
-      SELECT agency_id FROM users WHERE id = auth.uid()
-    )
-  );
+  USING (agency_id = public.user_agency_id());
 
--- RLS Policies for tenants
+-- Tenants policy (using the function)
 CREATE POLICY "Users can manage tenants in their agency"
   ON tenants FOR ALL
-  USING (
-    agency_id IN (
-      SELECT agency_id FROM users WHERE id = auth.uid()
-    )
-  );
+  USING (agency_id = public.user_agency_id());
 
--- RLS Policies for payments
+-- Payments policy (using the function)
 CREATE POLICY "Users can manage payments in their agency"
   ON payments FOR ALL
-  USING (
-    agency_id IN (
-      SELECT agency_id FROM users WHERE id = auth.uid()
-    )
-  );
+  USING (agency_id = public.user_agency_id());
 
--- RLS Policies for tasks
+-- Tasks policy (using the function)
 CREATE POLICY "Users can manage tasks in their agency"
   ON tasks FOR ALL
-  USING (
-    agency_id IN (
-      SELECT agency_id FROM users WHERE id = auth.uid()
-    )
-  );
+  USING (agency_id = public.user_agency_id());
 
--- RLS Policies for documents
+-- Documents policy (using the function)
 CREATE POLICY "Users can manage documents in their agency"
   ON documents FOR ALL
-  USING (
-    agency_id IN (
-      SELECT agency_id FROM users WHERE id = auth.uid()
-    )
-  );
+  USING (agency_id = public.user_agency_id());
 
 -- Function to create user and agency on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
