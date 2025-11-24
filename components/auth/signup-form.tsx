@@ -58,7 +58,11 @@ export function SignupForm() {
 
   const onSubmit = async (data: SignupFormValues) => {
     if (!isSupabaseConfigured || !supabase) {
-      setError('Supabase non è configurato. Configura NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY nel file .env.local')
+      const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+      const errorMessage = isProduction
+        ? 'Supabase non è configurato. Contatta il supporto o verifica le variabili d\'ambiente in Netlify.'
+        : 'Supabase non è configurato. Configura NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY nel file .env.local'
+      setError(errorMessage)
       return
     }
 
@@ -121,7 +125,11 @@ export function SignupForm() {
 
   const handleGoogleSignup = async () => {
     if (!isSupabaseConfigured || !supabase) {
-      setError('Supabase non è configurato. Configura NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY nel file .env.local')
+      const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+      const errorMessage = isProduction
+        ? 'Supabase non è configurato. Contatta il supporto o verifica le variabili d\'ambiente in Netlify.'
+        : 'Supabase non è configurato. Configura NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY nel file .env.local'
+      setError(errorMessage)
       return
     }
 

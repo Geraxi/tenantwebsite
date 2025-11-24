@@ -46,7 +46,11 @@ export function LoginForm() {
 
   const onSubmit = async (data: LoginFormValues) => {
     if (!isSupabaseConfigured || !supabase) {
-      setError('Supabase non è configurato. Configura NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY nel file .env.local')
+      const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+      const errorMessage = isProduction
+        ? 'Supabase non è configurato. Contatta il supporto o verifica le variabili d\'ambiente in Netlify.'
+        : 'Supabase non è configurato. Configura NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY nel file .env.local'
+      setError(errorMessage)
       return
     }
 
@@ -75,7 +79,11 @@ export function LoginForm() {
 
   const handleGoogleLogin = async () => {
     if (!isSupabaseConfigured || !supabase) {
-      setError('Supabase non è configurato. Configura NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY nel file .env.local')
+      const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+      const errorMessage = isProduction
+        ? 'Supabase non è configurato. Contatta il supporto o verifica le variabili d\'ambiente in Netlify.'
+        : 'Supabase non è configurato. Configura NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY nel file .env.local'
+      setError(errorMessage)
       return
     }
 
