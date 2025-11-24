@@ -1,4 +1,3 @@
-// @ts-expect-error - notFound exists but TypeScript definitions may be out of sync
 import { notFound } from 'next/navigation'
 import { getOwner } from '@/lib/actions/owners'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'

@@ -1,3 +1,4 @@
+/// <reference types="../../types/lucide-react" />
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { CheckCircle2, AlertCircle, Plus, FileText } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
