@@ -16,11 +16,13 @@ import { createClient } from '@/lib/supabase/client'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 interface CRMNavbarProps {
-  user: SupabaseUser
+  user: SupabaseUser | null
 }
 
 export function CRMNavbar({ user }: CRMNavbarProps) {
   const router = useRouter()
+
+  if (!user) return null
 
   const handleLogout = async () => {
     const supabase = createClient()
