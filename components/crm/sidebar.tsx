@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import {
-  Building,
+  Home,
   Users,
   UserCheck,
   DollarSign,
@@ -28,7 +28,7 @@ const navItems = [
   {
     title: 'Proprietà',
     href: '/crm/properties',
-    icon: Building,
+    icon: Home,
   },
   {
     title: 'Proprietari',
@@ -123,7 +123,7 @@ export function CRMSidebar() {
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="md:hidden fixed top-4 left-4 z-50">
-              <Building className="h-5 w-5" />
+              <Home className="h-5 w-5" />
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-64 p-0 bg-blue-600">
