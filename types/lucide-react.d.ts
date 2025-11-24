@@ -9,7 +9,7 @@ declare module 'lucide-react' {
   
   export type Icon = FC<IconProps>
   
-  // Export all commonly used icons
+  // Export all commonly used icons - explicitly declare all icons that might be imported
   export const Plus: Icon
   export const CheckCircle2: Icon
   export const AlertCircle: Icon
