@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation'
 import { getOwner } from '@/lib/actions/owners'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-// @ts-expect-error - TypeScript definitions are out of sync, but icons exist at runtime
 import { ArrowLeft, Mail, Phone, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { DocumentsSection } from '@/components/crm/documents/documents-section'

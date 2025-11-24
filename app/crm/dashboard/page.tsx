@@ -1,5 +1,4 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-// @ts-expect-error - TypeScript definitions are out of sync, but icons exist at runtime
 import { CheckCircle2, AlertCircle, Plus, FileText } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { RevenueChart } from '@/components/crm/revenue-chart'
