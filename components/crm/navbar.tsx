@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Building2 } from 'lucide-react'
+import { Building } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
@@ -64,13 +64,13 @@ export function CRMNavbar({ user }: CRMNavbarProps) {
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <a href="/crm/settings">
-                  <Building2 className="mr-2 h-4 w-4" />
+                  <Building className="mr-2 h-4 w-4" />
                   <span>Profilo</span>
                 </a>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <a href="/crm/settings">
-                  <Building2 className="mr-2 h-4 w-4" />
+                  <Building className="mr-2 h-4 w-4" />
                   <span>Impostazioni</span>
                 </a>
               </DropdownMenuItem>

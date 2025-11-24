@@ -1,9 +1,9 @@
-import { Building2, Home, Users, DollarSign, FileText, UserCheck } from 'lucide-react'
+import { Building, Home, Users, DollarSign, FileText, UserCheck } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const features = [
   {
-    icon: Building2,
+    icon: Building,
     title: 'Gestione Affitti',
     description: 'Gestisci tutti i tuoi contratti di affitto in un unico posto. Traccia scadenze, rinnovi e pagamenti mensili con facilità.',
   },

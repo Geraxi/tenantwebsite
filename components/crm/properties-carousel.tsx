@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Building2, ArrowRight, ChevronLeft, ChevronRight, Home, MapPin, Rocket, User } from 'lucide-react'
+import { Building, ArrowRight, ChevronLeft, ChevronRight, Home, MapPin, Rocket, User } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
