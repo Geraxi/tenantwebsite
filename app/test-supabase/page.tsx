@@ -33,20 +33,19 @@ export default function TestSupabasePage() {
     // Test connection
     if (supabaseUrl && supabaseAnonKey) {
       const supabase = createClient()
-      supabase
-        .from('agencies')
-        .select('count')
-        .limit(1)
-        .then(() => {
+      ;(async () => {
+        try {
+          const { error } = await supabase.from('agencies').select('id').limit(1)
+          if (error) throw error
           setChecks(prev => ({ ...prev, connection: true }))
-        })
-        .catch((err) => {
+        } catch (err: any) {
           setChecks(prev => ({
             ...prev,
             connection: false,
-            error: err.message,
+            error: err?.message || 'Errore di connessione',
           }))
-        })
+        }
+      })()
     }
   }, [])
 

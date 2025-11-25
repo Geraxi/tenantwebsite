@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -35,16 +35,40 @@ export function SignupForm() {
   const [success, setSuccess] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [supabaseConfig, setSupabaseConfig] = useState<{
+    configured: boolean
+    client: ReturnType<typeof createClient> | null
+  }>({ configured: false, client: null })
   const router = useRouter()
   
-  // Check if Supabase is configured
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  const isSupabaseConfigured = supabaseUrl && supabaseAnonKey && 
-    !supabaseUrl.includes('your_supabase') && 
-    !supabaseAnonKey.includes('your_supabase')
+  // Check if Supabase is configured (check at runtime, not just build time)
+  useEffect(() => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    const isConfigured = supabaseUrl && supabaseAnonKey && 
+      !supabaseUrl.includes('your_supabase') && 
+      !supabaseAnonKey.includes('your_supabase') &&
+      supabaseUrl.startsWith('https://') &&
+      supabaseAnonKey.length > 20
+    
+    if (isConfigured) {
+      try {
+        const client = createClient()
+        setSupabaseConfig({ configured: true, client })
+      } catch (err) {
+        console.error('Failed to create Supabase client:', err)
+        setSupabaseConfig({ configured: false, client: null })
+      }
+    } else {
+      setSupabaseConfig({ configured: false, client: null })
+      const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+      if (isProduction) {
+        setError('Supabase non è configurato. Verifica le variabili d\'ambiente in Netlify: NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY')
+      }
+    }
+  }, [])
   
-  const supabase = isSupabaseConfigured ? createClient() : null
+  const { configured: isSupabaseConfigured, client: supabase } = supabaseConfig
 
   const form = useForm({
     resolver: zodResolver(signupSchema),
