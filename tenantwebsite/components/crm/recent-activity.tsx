@@ -5,8 +5,6 @@ import { CheckCircle2, File, ArrowRight, AlertCircle, Home } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { usePathname } from 'next/navigation'
-import { formatDistanceToNow } from 'date-fns'
-import { it } from 'date-fns/locale'
 
 interface Activity {
   id: string
@@ -18,6 +16,27 @@ interface Activity {
 
 interface RecentActivityProps {
   activities: Activity[]
+}
+
+function timeAgo(date: Date): string {
+  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
+
+  let interval = seconds / 31536000
+  if (interval > 1) return Math.floor(interval) + " anni fa"
+
+  interval = seconds / 2592000
+  if (interval > 1) return Math.floor(interval) + " mesi fa"
+
+  interval = seconds / 86400
+  if (interval > 1) return Math.floor(interval) + " giorni fa"
+
+  interval = seconds / 3600
+  if (interval > 1) return Math.floor(interval) + " ore fa"
+
+  interval = seconds / 60
+  if (interval > 1) return Math.floor(interval) + " minuti fa"
+
+  return "pochi secondi fa"
 }
 
 export function RecentActivity({ activities }: RecentActivityProps) {
@@ -73,7 +92,7 @@ export function RecentActivity({ activities }: RecentActivityProps) {
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-sm">{activity.title}</p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {activity.property} • {formatDistanceToNow(new Date(activity.date), { addSuffix: true, locale: it })}
+                    {activity.property} • {timeAgo(new Date(activity.date))}
                   </p>
                 </div>
               </div>
