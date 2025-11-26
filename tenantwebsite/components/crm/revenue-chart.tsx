@@ -2,49 +2,39 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 
-const monthlyData = [
-  { month: 'Ott', revenue: 850 },
-  { month: 'Nov', revenue: 3400 },
-]
+interface RevenueChartProps {
+  data: { month: string; revenue: number }[]
+}
 
-const quarterlyData = [
-  { period: 'Q1', revenue: 3200 },
-  { period: 'Q2', revenue: 3600 },
-  { period: 'Q3', revenue: 3800 },
-  { period: 'Q4', revenue: 4200 },
-]
-
-const yearlyData = [
-  { year: '2022', revenue: 14000 },
-  { year: '2023', revenue: 14800 },
-]
-
-export function RevenueChart() {
+export function RevenueChart({ data }: RevenueChartProps) {
   const [timeframe, setTimeframe] = useState<'monthly' | 'quarterly' | 'yearly'>('monthly')
 
-  const chartData = useMemo(() => {
-    switch (timeframe) {
-      case 'monthly':
-        return monthlyData
-      case 'quarterly':
-        return quarterlyData
-      case 'yearly':
-        return yearlyData
-      default:
-        return monthlyData
-    }
-  }, [timeframe])
-
-  const dataKey = timeframe === 'monthly' ? 'month' : timeframe === 'quarterly' ? 'period' : 'year'
+  // For now we only support monthly view with real data
+  // In a real app, we would aggregate data based on timeframe
+  const chartData = data.length > 0 ? data : []
 
   const formatNumber = (num: number): string => {
     return new Intl.NumberFormat('it-IT', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(num)
+  }
+
+  if (chartData.length === 0) {
+    return (
+      <Card className="border shadow-sm h-full">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold">Panoramica Entrate</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center justify-center h-[320px] text-muted-foreground">
+          <p>Nessun dato disponibile</p>
+          <p className="text-sm">Aggiungi pagamenti per vedere il grafico</p>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
@@ -59,35 +49,27 @@ export function RevenueChart() {
               variant={timeframe === 'monthly' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setTimeframe('monthly')}
-              className={`h-7 px-3 text-xs ${
-                timeframe === 'monthly' 
-                  ? 'bg-blue-600 text-white hover:bg-blue-700' 
+              className={`h-7 px-3 text-xs ${timeframe === 'monthly'
+                  ? 'bg-blue-600 text-white hover:bg-blue-700'
                   : 'bg-background hover:bg-muted'
-              }`}
+                }`}
             >
               Mensile
             </Button>
+            {/* Disable other views for now as we only fetch monthly history */}
             <Button
-              variant={timeframe === 'quarterly' ? 'default' : 'outline'}
+              variant="outline"
               size="sm"
-              onClick={() => setTimeframe('quarterly')}
-              className={`h-7 px-3 text-xs ${
-                timeframe === 'quarterly' 
-                  ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                  : 'bg-background hover:bg-muted'
-              }`}
+              disabled
+              className="h-7 px-3 text-xs bg-background hover:bg-muted opacity-50 cursor-not-allowed"
             >
               Trimestrale
             </Button>
             <Button
-              variant={timeframe === 'yearly' ? 'default' : 'outline'}
+              variant="outline"
               size="sm"
-              onClick={() => setTimeframe('yearly')}
-              className={`h-7 px-3 text-xs ${
-                timeframe === 'yearly' 
-                  ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                  : 'bg-background hover:bg-muted'
-              }`}
+              disabled
+              className="h-7 px-3 text-xs bg-background hover:bg-muted opacity-50 cursor-not-allowed"
             >
               Annuale
             </Button>
@@ -99,27 +81,27 @@ export function RevenueChart() {
           <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 10 }}>
             <defs>
               <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#a78bfa" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#a78bfa" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} vertical={false} />
-            <XAxis 
-              dataKey={dataKey}
+            <XAxis
+              dataKey="month"
               tick={{ fill: '#6b7280', fontSize: 12, fontWeight: 400 }}
               tickLine={false}
               axisLine={false}
               height={40}
             />
-            <YAxis 
+            <YAxis
               tick={{ fill: '#6b7280', fontSize: 12, fontWeight: 400 }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(value: number) => `€${formatNumber(value)}`}
               width={70}
             />
-            <Tooltip 
-              contentStyle={{ 
+            <Tooltip
+              contentStyle={{
                 backgroundColor: '#ffffff',
                 border: '1px solid #e5e7eb',
                 borderRadius: '8px',
@@ -132,9 +114,9 @@ export function RevenueChart() {
               separator=""
               cursor={{ stroke: '#e5e7eb', strokeWidth: 1 }}
             />
-            <Area 
-              type="monotone" 
-              dataKey="revenue" 
+            <Area
+              type="monotone"
+              dataKey="revenue"
               stroke="#6366f1"
               strokeWidth={2}
               fill="url(#colorRevenue)"
@@ -147,4 +129,5 @@ export function RevenueChart() {
     </Card>
   )
 }
+
 

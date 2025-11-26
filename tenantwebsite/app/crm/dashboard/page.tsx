@@ -8,7 +8,7 @@ import { PropertiesCarousel } from '@/components/crm/properties-carousel'
 async function getStats() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  
+
   if (!user) return null
 
   // Get user's agency_id
@@ -30,6 +30,8 @@ async function getStats() {
       occupancyChange: 0,
       revenueChange: 0,
       recentProperties: [],
+      revenueHistory: [],
+      recentActivities: [],
     }
   }
 
@@ -59,8 +61,8 @@ async function getStats() {
     .eq('type', 'rent')
     .not('tenant_id', 'is', null)
 
-  const occupancyRate = rentPropertiesCount && rentPropertiesCount > 0 
-    ? Math.round((rentedCount || 0) / rentPropertiesCount * 100) 
+  const occupancyRate = rentPropertiesCount && rentPropertiesCount > 0
+    ? Math.round((rentedCount || 0) / rentPropertiesCount * 100)
     : 0
 
   // Get tenants count
@@ -77,12 +79,52 @@ async function getStats() {
 
   const { data: payments } = await supabase
     .from('payments')
-    .select('amount')
+    .select('amount, paid_date')
     .eq('agency_id', agencyId)
     .eq('status', 'completed')
     .gte('paid_date', startOfMonth.toISOString())
 
   const monthlyRevenue = payments?.reduce((sum: number, p: { amount: number | null }) => sum + Number(p.amount || 0), 0) || 0
+
+  // Get revenue history (last 6 months)
+  const sixMonthsAgo = new Date()
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5)
+  sixMonthsAgo.setDate(1)
+  sixMonthsAgo.setHours(0, 0, 0, 0)
+
+  const { data: historyPayments } = await supabase
+    .from('payments')
+    .select('amount, paid_date')
+    .eq('agency_id', agencyId)
+    .eq('status', 'completed')
+    .gte('paid_date', sixMonthsAgo.toISOString())
+    .order('paid_date', { ascending: true })
+
+  // Process revenue history
+  const revenueMap = new Map<string, number>()
+  const monthNames = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic']
+
+  // Initialize last 6 months with 0
+  for (let i = 0; i < 6; i++) {
+    const d = new Date()
+    d.setMonth(d.getMonth() - i)
+    const key = `${monthNames[d.getMonth()]} ${d.getFullYear()}`
+    revenueMap.set(key, 0)
+  }
+
+  historyPayments?.forEach((payment) => {
+    if (payment.paid_date) {
+      const date = new Date(payment.paid_date)
+      const key = `${monthNames[date.getMonth()]} ${date.getFullYear()}`
+      const current = revenueMap.get(key) || 0
+      revenueMap.set(key, current + Number(payment.amount || 0))
+    }
+  })
+
+  // Convert map to array and reverse to show chronological order
+  const revenueHistory = Array.from(revenueMap.entries())
+    .map(([month, revenue]) => ({ month, revenue }))
+    .reverse()
 
   // Get pending tasks count
   const { count: tasksCount } = await supabase
@@ -109,6 +151,40 @@ async function getStats() {
     .order('created_at', { ascending: false })
     .limit(10)
 
+  // Get recent activities (combining payments and tasks for now)
+  const { data: recentPayments } = await supabase
+    .from('payments')
+    .select('id, amount, paid_date, properties(title)')
+    .eq('agency_id', agencyId)
+    .eq('status', 'completed')
+    .order('paid_date', { ascending: false })
+    .limit(5)
+
+  const { data: recentTasks } = await supabase
+    .from('tasks')
+    .select('id, title, created_at, properties(title)')
+    .eq('agency_id', agencyId)
+    .order('created_at', { ascending: false })
+    .limit(5)
+
+  // Combine and sort activities
+  const activities = [
+    ...(recentPayments?.map(p => ({
+      id: `pay-${p.id}`,
+      type: 'payment',
+      title: `Pagamento di €${p.amount} ricevuto`,
+      property: p.properties?.title || 'Proprietà sconosciuta',
+      date: new Date(p.paid_date),
+    })) || []),
+    ...(recentTasks?.map(t => ({
+      id: `task-${t.id}`,
+      type: 'task',
+      title: t.title,
+      property: t.properties?.title || 'Generale',
+      date: new Date(t.created_at),
+    })) || [])
+  ].sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 5)
+
   // Calculate changes (simplified - in production, compare with previous period)
   const propertiesChange = 0 // Would calculate from previous month
   const occupancyChange = 0 // Would calculate from previous month
@@ -125,6 +201,8 @@ async function getStats() {
     occupancyChange,
     revenueChange,
     recentProperties: recentProperties || [],
+    revenueHistory,
+    recentActivities: activities,
   }
 }
 
@@ -136,7 +214,7 @@ export default async function DashboardPage() {
       title: 'Proprietà Totali',
       value: stats?.totalProperties.toString() || '0',
       change: stats?.propertiesChange ? `↑${stats.propertiesChange}% dal mese scorso` : 'Nessun cambiamento',
-      changeType: (stats?.propertiesChange || 0) > 0 ? 'positive' as const : 'neutral' as const,
+      changeType: (stats?.propertiesChange || 0) > 0 ? 'positive' : 'neutral',
       icon: FileText,
       iconBg: 'bg-blue-100',
       iconColor: 'text-blue-600',
@@ -145,7 +223,7 @@ export default async function DashboardPage() {
       title: 'Tasso di Occupazione',
       value: `${stats?.occupancyRate || 0}%`,
       change: stats?.occupancyChange ? `↑${stats.occupancyChange}% dal mese scorso` : 'Nessun cambiamento',
-      changeType: (stats?.occupancyChange || 0) > 0 ? 'positive' as const : 'neutral' as const,
+      changeType: (stats?.occupancyChange || 0) > 0 ? 'positive' : 'neutral',
       icon: CheckCircle2,
       iconBg: 'bg-green-100',
       iconColor: 'text-green-600',
@@ -154,7 +232,7 @@ export default async function DashboardPage() {
       title: 'Entrate Mensili',
       value: `€${(stats?.monthlyRevenue || 0).toLocaleString('it-IT')}`,
       change: stats?.revenueChange ? `↑${stats.revenueChange}% dal mese scorso` : 'Nessun cambiamento',
-      changeType: (stats?.revenueChange || 0) > 0 ? 'positive' as const : 'neutral' as const,
+      changeType: (stats?.revenueChange || 0) > 0 ? 'positive' : 'neutral',
       icon: CheckCircle2,
       iconBg: 'bg-purple-100',
       iconColor: 'text-purple-600',
@@ -163,7 +241,7 @@ export default async function DashboardPage() {
       title: 'Attività in Sospeso',
       value: stats?.pendingTasks.toString() || '0',
       change: stats?.overdueTasks ? `→${stats.overdueTasks} in ritardo` : 'Tutto in regola',
-      changeType: (stats?.overdueTasks || 0) > 0 ? 'warning' as const : 'positive' as const,
+      changeType: (stats?.overdueTasks || 0) > 0 ? 'warning' : 'positive',
       icon: AlertCircle,
       iconBg: 'bg-orange-100',
       iconColor: 'text-orange-600',
@@ -179,10 +257,10 @@ export default async function DashboardPage() {
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {statsData.map((stat) => {
+        {statsData.map((stat, index) => {
           const Icon = stat.icon
           return (
-            <Card key={stat.title} className="relative overflow-hidden">
+            <Card key={index} className="relative overflow-hidden">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
                 <div className={`${stat.iconBg} rounded-full p-2`}>
@@ -191,11 +269,10 @@ export default async function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold mb-1">{stat.value}</div>
-                <p className={`text-xs ${
-                  stat.changeType === 'positive' ? 'text-green-600' : 
-                  stat.changeType === 'warning' ? 'text-red-600' : 
-                  'text-muted-foreground'
-                }`}>
+                <p className={`text-xs ${stat.changeType === 'positive' ? 'text-green-600' :
+                    stat.changeType === 'warning' ? 'text-red-600' :
+                      'text-muted-foreground'
+                  }`}>
                   {stat.change}
                 </p>
               </CardContent>
@@ -206,12 +283,12 @@ export default async function DashboardPage() {
 
       {/* Revenue Chart and Recent Activity */}
       <div className="grid gap-4 md:grid-cols-2">
-        <RevenueChart />
-        <RecentActivity />
+        <RevenueChart data={stats?.revenueHistory || []} />
+        <RecentActivity activities={stats?.recentActivities || []} />
       </div>
 
       {/* Properties Section */}
-      <PropertiesCarousel 
+      <PropertiesCarousel
         properties={stats?.recentProperties?.map((p: any) => ({
           id: p.id,
           name: p.title,
@@ -225,7 +302,7 @@ export default async function DashboardPage() {
           images: p.images || [],
           tenant_id: p.tenant_id,
           owner: Array.isArray(p.owners) ? p.owners[0] || null : p.owners || null,
-        })) || []} 
+        })) || []}
         isDemo={false}
       />
     </div>
