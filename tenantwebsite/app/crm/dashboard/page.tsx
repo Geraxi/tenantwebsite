@@ -169,20 +169,32 @@ async function getStats() {
 
   // Combine and sort activities
   const activities = [
-    ...(recentPayments?.map(p => ({
-      id: `pay-${p.id}`,
-      type: 'payment',
-      title: `Pagamento di €${p.amount} ricevuto`,
-      property: p.properties?.title || 'Proprietà sconosciuta',
-      date: new Date(p.paid_date),
-    })) || []),
-    ...(recentTasks?.map(t => ({
-      id: `task-${t.id}`,
-      type: 'task',
-      title: t.title,
-      property: t.properties?.title || 'Generale',
-      date: new Date(t.created_at),
-    })) || [])
+    ...(recentPayments?.map(p => {
+      const propertyTitle = Array.isArray(p.properties)
+        ? p.properties[0]?.title
+        : (p.properties as any)?.title || 'Proprietà sconosciuta'
+
+      return {
+        id: `pay-${p.id}`,
+        type: 'payment',
+        title: `Pagamento di €${p.amount} ricevuto`,
+        property: propertyTitle,
+        date: new Date(p.paid_date),
+      }
+    }) || []),
+    ...(recentTasks?.map(t => {
+      const propertyTitle = Array.isArray(t.properties)
+        ? t.properties[0]?.title
+        : (t.properties as any)?.title || 'Generale'
+
+      return {
+        id: `task-${t.id}`,
+        type: 'task',
+        title: t.title,
+        property: propertyTitle,
+        date: new Date(t.created_at),
+      }
+    }) || [])
   ].sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 5)
 
   // Calculate changes (simplified - in production, compare with previous period)
@@ -270,8 +282,8 @@ export default async function DashboardPage() {
               <CardContent>
                 <div className="text-2xl font-bold mb-1">{stat.value}</div>
                 <p className={`text-xs ${stat.changeType === 'positive' ? 'text-green-600' :
-                    stat.changeType === 'warning' ? 'text-red-600' :
-                      'text-muted-foreground'
+                  stat.changeType === 'warning' ? 'text-red-600' :
+                    'text-muted-foreground'
                   }`}>
                   {stat.change}
                 </p>
