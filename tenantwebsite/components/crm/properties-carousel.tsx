@@ -59,12 +59,12 @@ export function PropertiesCarousel({ properties, isDemo = false }: PropertiesCar
 
   const scroll = (direction: 'left' | 'right') => {
     if (!scrollContainerRef.current) return
-    
+
     const container = scrollContainerRef.current
     const cardWidth = 384 // w-96 = 384px
     const gap = 16 // gap-4 = 16px
     const scrollAmount = cardWidth + gap
-    
+
     if (direction === 'left') {
       container.scrollBy({ left: -scrollAmount, behavior: 'smooth' })
       setCurrentIndex(Math.max(0, currentIndex - 1))
@@ -76,17 +76,17 @@ export function PropertiesCarousel({ properties, isDemo = false }: PropertiesCar
 
   const getPropertyImage = (property: Property): string => {
     // Use first image from images array, or image field, or placeholder
-    if (property.images && property.images.length > 0) {
+    if (Array.isArray(property.images) && property.images.length > 0) {
       return property.images[0]
     }
     if (property.image) {
       return property.image
     }
-    
+
     // Get property type to determine relevant image
     const propertyType = property.type?.toLowerCase() || ''
     const propertyName = (property.name || property.title || '').toLowerCase()
-    
+
     // Use relevant images based on property type
     if (propertyType.includes('negozio') || propertyType.includes('shop') || propertyType.includes('retail') || propertyName.includes('negozio')) {
       // Retail/Shop images
@@ -101,7 +101,7 @@ export function PropertiesCarousel({ properties, isDemo = false }: PropertiesCar
       // Apartment images
       return `https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop&q=80`
     }
-    
+
     // Default high-quality property images based on ID for variety
     const defaultImages = [
       'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=600&fit=crop&q=80', // Modern apartment
@@ -110,7 +110,7 @@ export function PropertiesCarousel({ properties, isDemo = false }: PropertiesCar
       'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop&q=80', // Apartment interior
       'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&h=600&fit=crop&q=80', // Modern home
     ]
-    
+
     const index = typeof property.id === 'number' ? (property.id - 1) % defaultImages.length : 0
     return defaultImages[index] || defaultImages[0]
   }
@@ -223,7 +223,7 @@ export function PropertiesCarousel({ properties, isDemo = false }: PropertiesCar
           const propertyName = getPropertyName(property)
           const hasImage = property.images && property.images.length > 0 || property.image
           const size = (property as any).size || (property as any).area || (property as any).square_meters
-          
+
           return (
             <Card
               key={property.id}
@@ -249,12 +249,12 @@ export function PropertiesCarousel({ properties, isDemo = false }: PropertiesCar
                       <Home className="h-16 w-16 text-gray-300" strokeWidth={1} />
                     </div>
                   )}
-                  
+
                   {/* Property Name Overlay */}
                   <div className="absolute top-4 left-4 z-10">
                     <h3 className="text-lg font-bold text-white drop-shadow-lg">{propertyName}</h3>
                   </div>
-                  
+
                   {/* Status Badge */}
                   <div className="absolute top-4 right-4 z-10">
                     <Badge
@@ -280,13 +280,13 @@ export function PropertiesCarousel({ properties, isDemo = false }: PropertiesCar
                     )}
                   </div>
                   {(() => {
-                    const ownerName = property.owner?.full_name || 
-                                     property.owner?.name || 
-                                     (property.owner?.first_name && property.owner?.last_name 
-                                       ? `${property.owner.first_name} ${property.owner.last_name}` 
-                                       : null) ||
-                                     property.owner_name ||
-                                     null
+                    const ownerName = property.owner?.full_name ||
+                      property.owner?.name ||
+                      (property.owner?.first_name && property.owner?.last_name
+                        ? `${property.owner.first_name} ${property.owner.last_name}`
+                        : null) ||
+                      property.owner_name ||
+                      null
                     return ownerName ? (
                       <div className="flex items-center gap-1.5 text-muted-foreground mb-4 text-sm">
                         <User className="h-4 w-4" />
@@ -294,7 +294,7 @@ export function PropertiesCarousel({ properties, isDemo = false }: PropertiesCar
                       </div>
                     ) : null
                   })()}
-                  
+
                   <div className="border-t pt-4">
                     <div className="flex items-center justify-between">
                       <div>
