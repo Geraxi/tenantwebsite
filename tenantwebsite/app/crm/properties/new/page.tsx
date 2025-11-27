@@ -1,4 +1,4 @@
-import { PropertyForm } from '@/components/crm/properties/property-form'
+import { PropertyForm } from '../../../../components/crm/properties/property-form'
 import { getOwners } from '@/lib/actions/owners'
 
 export default async function NewPropertyPage() {
