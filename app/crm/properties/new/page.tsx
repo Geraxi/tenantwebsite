@@ -10,14 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ArrowLeft, Building, MapPin, Euro, Ruler, Home, Upload } from 'lucide-react'
 import Link from 'next/link'
 
-export default async function NewPropertyPage({
-    searchParams,
-}: {
-    searchParams: Promise<{ ownerId?: string }>
-}) {
-    const params = await searchParams
+export default async function NewPropertyPage() {
     const owners = await getOwners()
-    const preSelectedOwnerId = params.ownerId
 
     async function handleSubmit(formData: FormData) {
         'use server'
@@ -83,7 +77,7 @@ export default async function NewPropertyPage({
 
                             <div className="space-y-2">
                                 <Label htmlFor="owner_id">Proprietario</Label>
-                                <Select name="owner_id" defaultValue={preSelectedOwnerId}>
+                                <Select name="owner_id">
                                     <SelectTrigger>
                                         <SelectValue placeholder="Seleziona proprietario" />
                                     </SelectTrigger>
