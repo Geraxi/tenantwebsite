@@ -40,6 +40,36 @@ export async function createOwner(formData: FormData) {
     throw new Error(error.message)
   }
 
+  // Handle document uploads if any
+  const docFiles = formData.getAll('documents') as File[]
+  const validDocs = docFiles.filter(f => f instanceof File && f.size > 0)
+
+  if (validDocs.length > 0 && data) {
+    const { uploadFile } = await import('@/lib/storage')
+
+    for (const file of validDocs) {
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${data.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+      try {
+        const url = await uploadFile('documents', `owner/${fileName}`, file)
+
+        // Insert document record
+        await supabase.from('documents').insert({
+          agency_id: userData.agency_id,
+          name: file.name,
+          type: file.type,
+          url: url,
+          file_path: `owner/${fileName}`,
+          entity_type: 'owner',
+          entity_id: data.id,
+          category: 'other'
+        })
+      } catch (err) {
+        console.error('Error uploading document:', err)
+      }
+    }
+  }
+
   revalidatePath('/crm/owners')
   return data
 }

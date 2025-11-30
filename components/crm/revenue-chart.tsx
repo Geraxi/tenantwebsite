@@ -4,6 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 const monthlyData = [
   { month: 'Ott', revenue: 850 },
@@ -24,6 +27,9 @@ const yearlyData = [
 
 export function RevenueChart() {
   const [timeframe, setTimeframe] = useState<'monthly' | 'quarterly' | 'yearly'>('monthly')
+  const pathname = usePathname()
+  const isDemo = pathname?.startsWith('/demo')
+  const paymentsLink = isDemo ? '/demo/payments' : '/crm/payments'
 
   const chartData = useMemo(() => {
     switch (timeframe) {
@@ -48,11 +54,13 @@ export function RevenueChart() {
   }
 
   return (
-    <Card className="border shadow-sm">
+    <Card className="border shadow-sm transition-all duration-200 hover:shadow-lg group">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div>
-            <CardTitle className="text-lg font-semibold">Panoramica Entrate</CardTitle>
+            <Link href={paymentsLink} className="block">
+              <CardTitle className="text-lg font-semibold group-hover:text-primary transition-colors cursor-pointer">Panoramica Entrate</CardTitle>
+            </Link>
           </div>
           <div className="flex gap-1.5">
             <Button
@@ -143,6 +151,14 @@ export function RevenueChart() {
             />
           </AreaChart>
         </ResponsiveContainer>
+        <div className="mt-4 pt-4 border-t">
+          <Link href={paymentsLink}>
+            <Button variant="outline" className="w-full group-hover:border-primary group-hover:text-primary transition-colors">
+              Visualizza Tutti i Pagamenti
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
+        </div>
       </CardContent>
     </Card>
   )

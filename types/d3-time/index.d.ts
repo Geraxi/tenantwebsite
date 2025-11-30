@@ -1,0 +1,38 @@
+declare module 'd3-time' {
+  export const timeInterval: any;
+  export const timeMillisecond: any;
+  export const timeSecond: any;
+  export const timeMinute: any;
+  export const timeHour: any;
+  export const timeDay: any;
+  export const timeWeek: any;
+  export const timeSunday: any;
+  export const timeMonday: any;
+  export const timeTuesday: any;
+  export const timeWednesday: any;
+  export const timeThursday: any;
+  export const timeFriday: any;
+  export const timeSaturday: any;
+  export const timeMonth: any;
+  export const timeYear: any;
+  export const timeTicks: any;
+  export const timeTickInterval: any;
+  export const utcMillisecond: any;
+  export const utcSecond: any;
+  export const utcMinute: any;
+  export const utcHour: any;
+  export const utcDay: any;
+  export const utcWeek: any;
+  export const utcSunday: any;
+  export const utcMonday: any;
+  export const utcTuesday: any;
+  export const utcWednesday: any;
+  export const utcThursday: any;
+  export const utcFriday: any;
+  export const utcSaturday: any;
+  export const utcMonth: any;
+  export const utcYear: any;
+  export const utcTicks: any;
+  export const utcTickInterval: any;
+}
+

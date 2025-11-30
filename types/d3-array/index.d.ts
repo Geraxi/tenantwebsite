@@ -1,0 +1,46 @@
+declare module 'd3-array' {
+  export const min: any;
+  export const max: any;
+  export const extent: any;
+  export const sum: any;
+  export const mean: any;
+  export const median: any;
+  export const quantile: any;
+  export const variance: any;
+  export const deviation: any;
+  export const bisectLeft: any;
+  export const bisectRight: any;
+  export const bisector: any;
+  export const ascending: any;
+  export const descending: any;
+  export const group: any;
+  export const groups: any;
+  export const rollup: any;
+  export const rollups: any;
+  export const index: any;
+  export const indexes: any;
+  export const groupSort: any;
+  export const count: any;
+  export const cross: any;
+  export const merge: any;
+  export const pairs: any;
+  export const permute: any;
+  export const range: any;
+  export const shuffle: any;
+  export const ticks: any;
+  export const tickIncrement: any;
+  export const tickStep: any;
+  export const nice: any;
+  export const thresholdFreedmanDiaconis: any;
+  export const thresholdScott: any;
+  export const thresholdSturges: any;
+  export const bin: any;
+  export const histogram: any;
+  export const union: any;
+  export const difference: any;
+  export const disjoint: any;
+  export const intersection: any;
+  export const superset: any;
+  export const subset: any;
+}
+

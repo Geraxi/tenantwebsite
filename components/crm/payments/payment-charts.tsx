@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { DollarSign, Clock, CheckCircle2 } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 interface Payment {
   id: string
@@ -17,7 +18,19 @@ interface PaymentChartsProps {
   payments: Payment[]
 }
 
+// Consistent number formatting to avoid hydration mismatches
+const formatNumber = (num: number): string => {
+  // Use consistent formatting that works the same on server and client
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
+
 export function PaymentCharts({ payments }: PaymentChartsProps) {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   const totalPaid = payments
     .filter(p => p.status === 'paid')
     .reduce((sum, p) => sum + p.amount, 0)
@@ -29,6 +42,15 @@ export function PaymentCharts({ payments }: PaymentChartsProps) {
   const paidCount = payments.filter(p => p.status === 'paid').length
   const pendingCount = payments.filter(p => p.status === 'unpaid').length
 
+  // Use consistent formatting during SSR to match client
+  const formattedPaid = isMounted 
+    ? new Intl.NumberFormat('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(totalPaid)
+    : formatNumber(totalPaid)
+  
+  const formattedPending = isMounted
+    ? new Intl.NumberFormat('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(totalPending)
+    : formatNumber(totalPending)
+
   return (
     <div className="grid gap-4 md:grid-cols-3">
       <Card>
@@ -37,7 +59,7 @@ export function PaymentCharts({ payments }: PaymentChartsProps) {
           <DollarSign className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">€{totalPaid.toLocaleString('it-IT')}</div>
+          <div className="text-2xl font-bold">€{formattedPaid}</div>
           <p className="text-xs text-muted-foreground">
             {paidCount} pagamento{paidCount !== 1 ? 'i' : ''} completato{paidCount !== 1 ? 'i' : ''}
           </p>
@@ -50,7 +72,7 @@ export function PaymentCharts({ payments }: PaymentChartsProps) {
           <Clock className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">€{totalPending.toLocaleString('it-IT')}</div>
+          <div className="text-2xl font-bold">€{formattedPending}</div>
           <p className="text-xs text-muted-foreground">
             {pendingCount} pagamento{pendingCount !== 1 ? 'i' : ''} in attesa
           </p>

@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { getOwner } from '@/lib/actions/owners'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Mail, Phone, MapPin } from 'lucide-react'
+import { ArrowLeft, Mail, Phone, MapPin, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { DocumentsSection } from '@/components/crm/documents/documents-section'
 import { getOwnerProperties } from '@/lib/actions/owners'
@@ -74,9 +74,17 @@ export default async function OwnerDetailPage({
 
           {/* Properties Owned */}
           <Card>
-            <CardHeader>
-              <CardTitle>Proprietà</CardTitle>
-              <CardDescription>Proprietà di questo proprietario</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <div className="space-y-1">
+                <CardTitle>Proprietà</CardTitle>
+                <CardDescription>Proprietà di questo proprietario</CardDescription>
+              </div>
+              <Link href={`/crm/properties/new?ownerId=${params.id}`}>
+                <Button size="sm" variant="outline">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Aggiungi
+                </Button>
+              </Link>
             </CardHeader>
             <CardContent>
               {properties.length === 0 ? (
@@ -84,8 +92,8 @@ export default async function OwnerDetailPage({
               ) : (
                 <div className="space-y-2">
                   {properties.map((property: any) => (
-                    <Link 
-                      key={property.id} 
+                    <Link
+                      key={property.id}
                       href={`/crm/properties/${property.id}`}
                       className="block p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                     >

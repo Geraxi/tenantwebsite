@@ -225,9 +225,13 @@ export function PropertiesCarousel({ properties, isDemo = false }: PropertiesCar
           const size = (property as any).size || (property as any).area || (property as any).square_meters
           
           return (
-            <Card
+            <Link
+              href={isDemo ? `/demo/properties/${property.id}` : `/crm/properties/${property.id}`}
               key={property.id}
-              className="bg-white border overflow-hidden relative flex-shrink-0 w-96 snap-start shadow-sm !p-0 !py-0 !gap-0 rounded-lg"
+              className="block"
+            >
+            <Card
+              className="bg-white border overflow-hidden relative flex-shrink-0 w-96 snap-start shadow-sm !p-0 !py-0 !gap-0 rounded-lg transition-all duration-200 hover:shadow-xl hover:scale-[1.02] cursor-pointer group"
             >
               <CardContent className="!p-0 !m-0 !px-0">
                 {/* Property Image */}
@@ -301,7 +305,7 @@ export function PropertiesCarousel({ properties, isDemo = false }: PropertiesCar
                         <p className="text-sm text-muted-foreground mb-1">
                           {property.type === 'sale' || property.type === 'Vendita' ? 'Prezzo di Vendita' : 'Affitto Mensile'}
                         </p>
-                        <p className="text-2xl font-bold text-foreground">€{formatNumber(getPropertyRent(property))}</p>
+                        <p className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors">€{formatNumber(getPropertyRent(property))}</p>
                       </div>
                       {!(property.type === 'sale' || property.type === 'Vendita') && (
                         <div className="text-right">
@@ -312,10 +316,15 @@ export function PropertiesCarousel({ properties, isDemo = false }: PropertiesCar
                         </div>
                       )}
                     </div>
+                    <div className="mt-4 flex items-center justify-between pt-2 border-t">
+                      <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors">Visualizza dettagli</span>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
+            </Link>
           )
         })}
       </div>

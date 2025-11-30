@@ -1,9 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CheckCircle2, AlertCircle, Plus, FileText } from 'lucide-react'
+import { CheckCircle2, AlertCircle, Plus, FileText, ArrowRight } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { RevenueChart } from '@/components/crm/revenue-chart'
 import { RecentActivity } from '@/components/crm/recent-activity'
 import { PropertiesCarousel } from '@/components/crm/properties-carousel'
+import Link from 'next/link'
 
 async function getStats() {
   const supabase = await createClient()
@@ -140,6 +141,8 @@ export default async function DashboardPage() {
       icon: FileText,
       iconBg: 'bg-blue-100',
       iconColor: 'text-blue-600',
+      href: '/crm/properties',
+      description: 'Visualizza tutte le proprietà',
     },
     {
       title: 'Tasso di Occupazione',
@@ -149,6 +152,8 @@ export default async function DashboardPage() {
       icon: CheckCircle2,
       iconBg: 'bg-green-100',
       iconColor: 'text-green-600',
+      href: '/crm/properties?type=rent',
+      description: 'Visualizza proprietà in affitto',
     },
     {
       title: 'Entrate Mensili',
@@ -158,6 +163,8 @@ export default async function DashboardPage() {
       icon: CheckCircle2,
       iconBg: 'bg-purple-100',
       iconColor: 'text-purple-600',
+      href: '/crm/payments',
+      description: 'Visualizza tutti i pagamenti',
     },
     {
       title: 'Attività in Sospeso',
@@ -167,6 +174,8 @@ export default async function DashboardPage() {
       icon: AlertCircle,
       iconBg: 'bg-orange-100',
       iconColor: 'text-orange-600',
+      href: '/crm/tasks',
+      description: 'Visualizza tutte le attività',
     },
   ]
 
@@ -182,24 +191,30 @@ export default async function DashboardPage() {
         {statsData.map((stat) => {
           const Icon = stat.icon
           return (
-            <Card key={stat.title} className="relative overflow-hidden">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                <div className={`${stat.iconBg} rounded-full p-2`}>
-                  <Icon className={`h-5 w-5 ${stat.iconColor}`} />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold mb-1">{stat.value}</div>
-                <p className={`text-xs ${
-                  stat.changeType === 'positive' ? 'text-green-600' : 
-                  stat.changeType === 'warning' ? 'text-red-600' : 
-                  'text-muted-foreground'
-                }`}>
-                  {stat.change}
-                </p>
-              </CardContent>
-            </Card>
+            <Link key={stat.title} href={stat.href} className="block">
+              <Card className="relative overflow-hidden transition-all duration-200 hover:shadow-lg hover:scale-[1.02] cursor-pointer group border-2 hover:border-primary/20">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium group-hover:text-primary transition-colors">{stat.title}</CardTitle>
+                  <div className={`${stat.iconBg} rounded-full p-2 group-hover:scale-110 transition-transform`}>
+                    <Icon className={`h-5 w-5 ${stat.iconColor}`} />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold mb-1 group-hover:text-primary transition-colors">{stat.value}</div>
+                  <p className={`text-xs mb-2 ${
+                    stat.changeType === 'positive' ? 'text-green-600' : 
+                    stat.changeType === 'warning' ? 'text-red-600' : 
+                    'text-muted-foreground'
+                  }`}>
+                    {stat.change}
+                  </p>
+                  <div className="flex items-center text-xs text-muted-foreground group-hover:text-primary transition-colors">
+                    <span>{stat.description}</span>
+                    <ArrowRight className="ml-1 h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           )
         })}
       </div>

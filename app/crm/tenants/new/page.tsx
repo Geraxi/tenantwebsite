@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, DollarSign, FileText } from 'lucide-react'
+import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, DollarSign, FileText, Upload } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function NewTenantPage() {
@@ -210,6 +210,32 @@ export default async function NewTenantPage() {
               placeholder="Aggiungi note, osservazioni o informazioni aggiuntive sull'inquilino..."
               rows={4}
             />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Upload className="h-5 w-5" />
+              Documenti
+            </CardTitle>
+            <CardDescription>Carica documenti dell'inquilino (ID, contratto, ecc.)</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <Label htmlFor="documents">Documenti (max 10MB per file)</Label>
+              <Input
+                id="documents"
+                name="documents"
+                type="file"
+                multiple
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                className="cursor-pointer"
+              />
+              <p className="text-xs text-muted-foreground">
+                Puoi selezionare più file contemporaneamente. Formati accettati: PDF, DOC, DOCX, immagini
+              </p>
+            </div>
           </CardContent>
         </Card>
 

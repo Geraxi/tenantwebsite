@@ -110,6 +110,32 @@ export default async function NewOwnerPage() {
           </CardContent>
         </Card>
 
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Documenti
+            </CardTitle>
+            <CardDescription>Carica documenti del proprietario (ID, atti, ecc.)</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <Label htmlFor="documents">Documenti (max 10MB per file)</Label>
+              <Input
+                id="documents"
+                name="documents"
+                type="file"
+                multiple
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                className="cursor-pointer"
+              />
+              <p className="text-xs text-muted-foreground">
+                Puoi selezionare più file contemporaneamente. Formati accettati: PDF, DOC, DOCX, immagini
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Actions */}
         <div className="flex justify-end gap-4">
           <Link href="/crm/owners">

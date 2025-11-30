@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { createClient } from '@/lib/supabase/server'
 import { UserSettings } from '@/components/crm/settings/user-settings'
 import { SubscriptionSettings } from '@/components/crm/settings/subscription-settings'
+import { IntegrationSettings } from '@/components/crm/settings/integration-settings'
+import { listApiKeys } from '@/lib/actions/integrations'
 
 export default async function SettingsPage() {
   const supabase = await createClient()
@@ -20,19 +22,23 @@ export default async function SettingsPage() {
   // Get agency subscription info
   let subscriptionTier = 'free'
   let subscriptionStatus = 'active'
-  
+
   if (userData?.agency_id) {
     const { data: agency } = await supabase
       .from('agencies')
       .select('subscription_tier, subscription_status')
       .eq('id', userData.agency_id)
       .single()
-    
+
     if (agency) {
       subscriptionTier = agency.subscription_tier || 'free'
       subscriptionStatus = agency.subscription_status || 'active'
     }
   }
+
+  // Fetch API Keys
+  const apiKeysResult = await listApiKeys()
+  const apiKeys = apiKeysResult.success && apiKeysResult.data ? apiKeysResult.data : []
 
   return (
     <div className="space-y-6">
@@ -52,10 +58,12 @@ export default async function SettingsPage() {
           </CardContent>
         </Card>
 
-        <SubscriptionSettings 
+        <SubscriptionSettings
           subscriptionTier={subscriptionTier}
           subscriptionStatus={subscriptionStatus}
         />
+
+        <IntegrationSettings initialKeys={apiKeys} />
       </div>
     </div>
   )

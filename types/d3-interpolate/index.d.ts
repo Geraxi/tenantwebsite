@@ -1,0 +1,29 @@
+declare module 'd3-interpolate' {
+  export const interpolate: any;
+  export const interpolateArray: any;
+  export const interpolateBasis: any;
+  export const interpolateBasisClosed: any;
+  export const interpolateDate: any;
+  export const interpolateDiscrete: any;
+  export const interpolateHue: any;
+  export const interpolateNumber: any;
+  export const interpolateObject: any;
+  export const interpolateRound: any;
+  export const interpolateString: any;
+  export const interpolateTransformCss: any;
+  export const interpolateTransformSvg: any;
+  export const interpolateZoom: any;
+  export const interpolateRgb: any;
+  export const interpolateRgbBasis: any;
+  export const interpolateRgbBasisClosed: any;
+  export const interpolateHsl: any;
+  export const interpolateHslLong: any;
+  export const interpolateLab: any;
+  export const interpolateHcl: any;
+  export const interpolateHclLong: any;
+  export const interpolateCubehelix: any;
+  export const interpolateCubehelixLong: any;
+  export const piecewise: any;
+  export const quantize: any;
+}
+

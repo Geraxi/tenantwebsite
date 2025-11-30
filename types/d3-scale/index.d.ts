@@ -1,0 +1,29 @@
+declare module 'd3-scale' {
+  export const scaleLinear: any;
+  export const scaleIdentity: any;
+  export const scaleTime: any;
+  export const scaleUtc: any;
+  export const scaleSequential: any;
+  export const scaleSequentialLog: any;
+  export const scaleSequentialPow: any;
+  export const scaleSequentialSqrt: any;
+  export const scaleSequentialSymlog: any;
+  export const scaleSequentialQuantile: any;
+  export const scaleDiverging: any;
+  export const scaleDivergingLog: any;
+  export const scaleDivergingPow: any;
+  export const scaleDivergingSqrt: any;
+  export const scaleDivergingSymlog: any;
+  export const scaleQuantize: any;
+  export const scaleQuantile: any;
+  export const scaleThreshold: any;
+  export const scaleOrdinal: any;
+  export const scaleImplicit: any;
+  export const scaleBand: any;
+  export const scalePoint: any;
+  export const scalePow: any;
+  export const scaleSqrt: any;
+  export const scaleLog: any;
+  export const scaleSymlog: any;
+}
+

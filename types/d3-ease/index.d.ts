@@ -1,0 +1,31 @@
+declare module 'd3-ease' {
+  export const easeLinear: any;
+  export const easePolyIn: any;
+  export const easePolyOut: any;
+  export const easePolyInOut: any;
+  export const easeQuadIn: any;
+  export const easeQuadOut: any;
+  export const easeQuadInOut: any;
+  export const easeCubicIn: any;
+  export const easeCubicOut: any;
+  export const easeCubicInOut: any;
+  export const easeSinIn: any;
+  export const easeSinOut: any;
+  export const easeSinInOut: any;
+  export const easeExpIn: any;
+  export const easeExpOut: any;
+  export const easeExpInOut: any;
+  export const easeCircleIn: any;
+  export const easeCircleOut: any;
+  export const easeCircleInOut: any;
+  export const easeElasticIn: any;
+  export const easeElasticOut: any;
+  export const easeElasticInOut: any;
+  export const easeBackIn: any;
+  export const easeBackOut: any;
+  export const easeBackInOut: any;
+  export const easeBounceIn: any;
+  export const easeBounceOut: any;
+  export const easeBounceInOut: any;
+}
+

@@ -22,14 +22,7 @@ export async function createProperty(formData: FormData) {
     throw new Error('Agenzia non trovata')
   }
 
-  const imagesJson = formData.get('images') as string
-  let images: string[] = []
-  try {
-    images = imagesJson ? JSON.parse(imagesJson) : []
-  } catch {
-    images = []
-  }
-
+  // First create the property without images
   const property = {
     agency_id: userData.agency_id,
     type: formData.get('type') as string,
@@ -42,7 +35,7 @@ export async function createProperty(formData: FormData) {
     rooms: formData.get('rooms') ? parseInt(formData.get('rooms') as string) : null,
     status: formData.get('status') as string || 'active',
     owner_id: formData.get('owner_id') as string || null,
-    images: images,
+    images: [],
   }
 
   const { data, error } = await supabase
@@ -53,6 +46,36 @@ export async function createProperty(formData: FormData) {
 
   if (error) {
     throw new Error(error.message)
+  }
+
+  // Handle image uploads if any
+  const imageFiles = formData.getAll('images') as File[]
+  const validImages = imageFiles.filter(f => f instanceof File && f.size > 0)
+
+  if (validImages.length > 0 && data) {
+    const { uploadFile } = await import('@/lib/storage')
+    const imageUrls: string[] = []
+
+    for (const file of validImages) {
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${data.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+      try {
+        const url = await uploadFile('property-images', `properties/${fileName}`, file)
+        imageUrls.push(url)
+      } catch (err) {
+        console.error('Error uploading image:', err)
+      }
+    }
+
+    // Update property with image URLs
+    if (imageUrls.length > 0) {
+      await supabase
+        .from('properties')
+        .update({ images: imageUrls })
+        .eq('id', data.id)
+
+      data.images = imageUrls
+    }
   }
 
   revalidatePath('/crm/properties')

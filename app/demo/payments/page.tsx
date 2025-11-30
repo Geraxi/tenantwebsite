@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, Rocket } from 'lucide-react'
 import Link from 'next/link'
@@ -12,6 +14,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { PaymentCharts } from '@/components/crm/payments/payment-charts'
+import { useState, useEffect } from 'react'
 
 // Demo payments data
 const demoPayments = [
@@ -62,7 +65,27 @@ const demoPayments = [
   },
 ]
 
+// Consistent number formatting to avoid hydration mismatches
+const formatNumber = (num: number): string => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
+
+// Consistent date formatting to avoid hydration mismatches
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString)
+  const day = date.getDate().toString().padStart(2, '0')
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const year = date.getFullYear()
+  return `${day}/${month}/${year}`
+}
+
 export default function DemoPaymentsPage() {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   const totalCompleted = demoPayments
     .filter(p => p.status === 'completed')
     .reduce((sum, p) => sum + p.amount, 0)
@@ -128,15 +151,28 @@ export default function DemoPaymentsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {demoPayments.map((payment) => (
-                <TableRow key={payment.id}>
-                  <TableCell className="font-medium">{payment.tenant}</TableCell>
-                  <TableCell>{payment.property}</TableCell>
-                  <TableCell>€{payment.amount.toLocaleString('it-IT')}</TableCell>
-                  <TableCell>{new Date(payment.dueDate).toLocaleDateString('it-IT')}</TableCell>
-                  <TableCell>
-                    {payment.paidDate ? new Date(payment.paidDate).toLocaleDateString('it-IT') : '-'}
-                  </TableCell>
+              {demoPayments.map((payment) => {
+                const formattedAmount = isMounted
+                  ? new Intl.NumberFormat('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(payment.amount)
+                  : formatNumber(payment.amount)
+                
+                const formattedDueDate = isMounted
+                  ? new Date(payment.dueDate).toLocaleDateString('it-IT')
+                  : formatDate(payment.dueDate)
+                
+                const formattedPaidDate = payment.paidDate 
+                  ? (isMounted 
+                      ? new Date(payment.paidDate).toLocaleDateString('it-IT')
+                      : formatDate(payment.paidDate))
+                  : '-'
+                
+                return (
+                  <TableRow key={payment.id}>
+                    <TableCell className="font-medium">{payment.tenant}</TableCell>
+                    <TableCell>{payment.property}</TableCell>
+                    <TableCell>€{formattedAmount}</TableCell>
+                    <TableCell>{formattedDueDate}</TableCell>
+                    <TableCell>{formattedPaidDate}</TableCell>
                   <TableCell>
                     <Badge 
                       variant="outline"
@@ -159,8 +195,9 @@ export default function DemoPaymentsPage() {
                       )}
                     </Badge>
                   </TableCell>
-                </TableRow>
-              ))}
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
         </CardContent>
