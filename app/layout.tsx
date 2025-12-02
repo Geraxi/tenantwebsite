@@ -15,11 +15,9 @@ export default function RootLayout({
   return (
     <html lang="it" className="w-full">
       <body className="antialiased w-full">
-        <div className="w-full min-h-screen flex flex-col">
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
-        </div>
+        <LayoutWrapper>
+          {children}
+        </LayoutWrapper>
       </body>
     </html>
   );
