@@ -4,13 +4,13 @@ import Link from 'next/link'
 
 export default function LoginPage() {
   return (
-    <div className="container flex items-center justify-center min-h-[calc(100vh-4rem)] py-12">
-      <div className="w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen px-4">
+      <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center justify-center gap-2 mb-6">
-            <Image 
-              src="/images/logo-removebg-preview.png" 
-              alt="Tenant Logo" 
+            <Image
+              src="/images/logo-removebg-preview.png"
+              alt="Tenant Logo"
               width={48}
               height={48}
               className="h-12 w-12"
