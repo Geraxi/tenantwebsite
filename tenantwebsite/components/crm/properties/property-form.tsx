@@ -100,7 +100,7 @@ export function PropertyForm({ owners }: PropertyFormProps) {
                             <FormField
                                 control={form.control}
                                 name="title"
-                                render={({ field }) => (
+                                render={({ field }: { field: any }) => (
                                     <FormItem>
                                         <FormLabel>Titolo Annuncio</FormLabel>
                                         <FormControl>
@@ -114,7 +114,7 @@ export function PropertyForm({ owners }: PropertyFormProps) {
                             <FormField
                                 control={form.control}
                                 name="type"
-                                render={({ field }) => (
+                                render={({ field }: { field: any }) => (
                                     <FormItem>
                                         <FormLabel>Tipo Proprietà</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -140,7 +140,7 @@ export function PropertyForm({ owners }: PropertyFormProps) {
                             <FormField
                                 control={form.control}
                                 name="price"
-                                render={({ field }) => (
+                                render={({ field }: { field: any }) => (
                                     <FormItem>
                                         <FormLabel>Prezzo (€)</FormLabel>
                                         <FormControl>
@@ -154,7 +154,7 @@ export function PropertyForm({ owners }: PropertyFormProps) {
                             <FormField
                                 control={form.control}
                                 name="status"
-                                render={({ field }) => (
+                                render={({ field }: { field: any }) => (
                                     <FormItem>
                                         <FormLabel>Stato</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -178,7 +178,7 @@ export function PropertyForm({ owners }: PropertyFormProps) {
                             <FormField
                                 control={form.control}
                                 name="address"
-                                render={({ field }) => (
+                                render={({ field }: { field: any }) => (
                                     <FormItem>
                                         <FormLabel>Indirizzo</FormLabel>
                                         <FormControl>
@@ -192,7 +192,7 @@ export function PropertyForm({ owners }: PropertyFormProps) {
                             <FormField
                                 control={form.control}
                                 name="city"
-                                render={({ field }) => (
+                                render={({ field }: { field: any }) => (
                                     <FormItem>
                                         <FormLabel>Città</FormLabel>
                                         <FormControl>
@@ -206,7 +206,7 @@ export function PropertyForm({ owners }: PropertyFormProps) {
                             <FormField
                                 control={form.control}
                                 name="size"
-                                render={({ field }) => (
+                                render={({ field }: { field: any }) => (
                                     <FormItem>
                                         <FormLabel>Dimensioni (mq)</FormLabel>
                                         <FormControl>
@@ -220,7 +220,7 @@ export function PropertyForm({ owners }: PropertyFormProps) {
                             <FormField
                                 control={form.control}
                                 name="rooms"
-                                render={({ field }) => (
+                                render={({ field }: { field: any }) => (
                                     <FormItem>
                                         <FormLabel>Stanze</FormLabel>
                                         <FormControl>
@@ -234,7 +234,7 @@ export function PropertyForm({ owners }: PropertyFormProps) {
                             <FormField
                                 control={form.control}
                                 name="owner_id"
-                                render={({ field }) => (
+                                render={({ field }: { field: any }) => (
                                     <FormItem>
                                         <FormLabel>Proprietario</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -261,7 +261,7 @@ export function PropertyForm({ owners }: PropertyFormProps) {
                         <FormField
                             control={form.control}
                             name="description"
-                            render={({ field }) => (
+                            render={({ field }: { field: any }) => (
                                 <FormItem>
                                     <FormLabel>Descrizione</FormLabel>
                                     <FormControl>
