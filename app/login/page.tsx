@@ -4,8 +4,8 @@ import Link from 'next/link'
 
 export default function LoginPage() {
   return (
-    <div className="grid place-items-center min-h-screen p-4">
-      <div className="w-full max-w-md">
+    <div className="grid place-items-center min-h-screen w-screen p-4">
+      <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center justify-center gap-2 mb-6">
             <Image
