@@ -4,8 +4,9 @@ import Link from 'next/link'
 
 export default function LoginPage() {
   return (
-    <div className="flex items-center justify-center min-h-screen w-full p-4 bg-background">
-      <div className="w-full max-w-md">
+    <>
+      <div className="fixed inset-0 bg-background" />
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md px-4">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center justify-center gap-2 mb-6">
             <Image
@@ -22,7 +23,6 @@ export default function LoginPage() {
         </div>
         <LoginForm />
       </div>
-    </div>
+    </>
   )
 }
-
