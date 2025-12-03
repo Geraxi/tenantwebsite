@@ -9,7 +9,7 @@ import Link from 'next/link'
 async function getStats() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  
+
   if (!user) return null
 
   // Get user's agency_id
@@ -60,8 +60,8 @@ async function getStats() {
     .eq('type', 'rent')
     .not('tenant_id', 'is', null)
 
-  const occupancyRate = rentPropertiesCount && rentPropertiesCount > 0 
-    ? Math.round((rentedCount || 0) / rentPropertiesCount * 100) 
+  const occupancyRate = rentPropertiesCount && rentPropertiesCount > 0
+    ? Math.round((rentedCount || 0) / rentPropertiesCount * 100)
     : 0
 
   // Get tenants count
@@ -201,11 +201,10 @@ export default async function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold mb-1 group-hover:text-primary transition-colors">{stat.value}</div>
-                  <p className={`text-xs mb-2 ${
-                    stat.changeType === 'positive' ? 'text-green-600' : 
-                    stat.changeType === 'warning' ? 'text-red-600' : 
-                    'text-muted-foreground'
-                  }`}>
+                  <p className={`text-xs mb-2 ${stat.changeType === 'positive' ? 'text-green-600' :
+                      stat.changeType === 'warning' ? 'text-red-600' :
+                        'text-muted-foreground'
+                    }`}>
                     {stat.change}
                   </p>
                   <div className="flex items-center text-xs text-muted-foreground group-hover:text-primary transition-colors">
@@ -221,12 +220,12 @@ export default async function DashboardPage() {
 
       {/* Revenue Chart and Recent Activity */}
       <div className="grid gap-4 md:grid-cols-2">
-        <RevenueChart />
+        <RevenueChart monthlyRevenue={stats?.monthlyRevenue} />
         <RecentActivity />
       </div>
 
       {/* Properties Section */}
-      <PropertiesCarousel 
+      <PropertiesCarousel
         properties={stats?.recentProperties?.map((p: any) => ({
           id: p.id,
           name: p.title,
@@ -240,7 +239,7 @@ export default async function DashboardPage() {
           images: p.images || [],
           tenant_id: p.tenant_id,
           owner: Array.isArray(p.owners) ? p.owners[0] || null : p.owners || null,
-        })) || []} 
+        })) || []}
         isDemo={false}
       />
     </div>

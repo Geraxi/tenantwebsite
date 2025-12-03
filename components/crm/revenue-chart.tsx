@@ -5,46 +5,21 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, TrendingUp } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
-const monthlyData = [
-  { month: 'Ott', revenue: 850 },
-  { month: 'Nov', revenue: 3400 },
-]
+interface RevenueChartProps {
+  monthlyRevenue?: number
+}
 
-const quarterlyData = [
-  { period: 'Q1', revenue: 3200 },
-  { period: 'Q2', revenue: 3600 },
-  { period: 'Q3', revenue: 3800 },
-  { period: 'Q4', revenue: 4200 },
-]
-
-const yearlyData = [
-  { year: '2022', revenue: 14000 },
-  { year: '2023', revenue: 14800 },
-]
-
-export function RevenueChart() {
+export function RevenueChart({ monthlyRevenue = 0 }: RevenueChartProps) {
   const [timeframe, setTimeframe] = useState<'monthly' | 'quarterly' | 'yearly'>('monthly')
   const pathname = usePathname()
   const isDemo = pathname?.startsWith('/demo')
   const paymentsLink = isDemo ? '/demo/payments' : '/crm/payments'
 
-  const chartData = useMemo(() => {
-    switch (timeframe) {
-      case 'monthly':
-        return monthlyData
-      case 'quarterly':
-        return quarterlyData
-      case 'yearly':
-        return yearlyData
-      default:
-        return monthlyData
-    }
-  }, [timeframe])
-
-  const dataKey = timeframe === 'monthly' ? 'month' : timeframe === 'quarterly' ? 'period' : 'year'
+  // Only show data if there's actual revenue
+  const hasData = monthlyRevenue > 0
 
   const formatNumber = (num: number): string => {
     return new Intl.NumberFormat('it-IT', {
@@ -67,11 +42,10 @@ export function RevenueChart() {
               variant={timeframe === 'monthly' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setTimeframe('monthly')}
-              className={`h-7 px-3 text-xs ${
-                timeframe === 'monthly' 
-                  ? 'bg-blue-600 text-white hover:bg-blue-700' 
+              className={`h-7 px-3 text-xs ${timeframe === 'monthly'
+                  ? 'bg-blue-600 text-white hover:bg-blue-700'
                   : 'bg-background hover:bg-muted'
-              }`}
+                }`}
             >
               Mensile
             </Button>
@@ -79,11 +53,10 @@ export function RevenueChart() {
               variant={timeframe === 'quarterly' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setTimeframe('quarterly')}
-              className={`h-7 px-3 text-xs ${
-                timeframe === 'quarterly' 
-                  ? 'bg-blue-600 text-white hover:bg-blue-700' 
+              className={`h-7 px-3 text-xs ${timeframe === 'quarterly'
+                  ? 'bg-blue-600 text-white hover:bg-blue-700'
                   : 'bg-background hover:bg-muted'
-              }`}
+                }`}
             >
               Trimestrale
             </Button>
@@ -91,11 +64,10 @@ export function RevenueChart() {
               variant={timeframe === 'yearly' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setTimeframe('yearly')}
-              className={`h-7 px-3 text-xs ${
-                timeframe === 'yearly' 
-                  ? 'bg-blue-600 text-white hover:bg-blue-700' 
+              className={`h-7 px-3 text-xs ${timeframe === 'yearly'
+                  ? 'bg-blue-600 text-white hover:bg-blue-700'
                   : 'bg-background hover:bg-muted'
-              }`}
+                }`}
             >
               Annuale
             </Button>
@@ -103,54 +75,38 @@ export function RevenueChart() {
         </div>
       </CardHeader>
       <CardContent className="pt-0">
-        <ResponsiveContainer width="100%" height={320}>
-          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 10 }}>
-            <defs>
-              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#a78bfa" stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} vertical={false} />
-            <XAxis 
-              dataKey={dataKey}
-              tick={{ fill: '#6b7280', fontSize: 12, fontWeight: 400 }}
-              tickLine={false}
-              axisLine={false}
-              height={40}
-            />
-            <YAxis 
-              tick={{ fill: '#6b7280', fontSize: 12, fontWeight: 400 }}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value: number) => `€${formatNumber(value)}`}
-              width={70}
-            />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: '#ffffff',
-                border: '1px solid #e5e7eb',
-                borderRadius: '8px',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                padding: '10px 14px'
-              }}
-              labelStyle={{ color: '#374151', fontWeight: 600, marginBottom: '6px', fontSize: '13px' }}
-              itemStyle={{ color: '#111827', fontSize: '13px', fontWeight: 600 }}
-              formatter={(value: number) => [`€${formatNumber(value)}`, 'Entrate']}
-              separator=""
-              cursor={{ stroke: '#e5e7eb', strokeWidth: 1 }}
-            />
-            <Area 
-              type="monotone" 
-              dataKey="revenue" 
-              stroke="#6366f1"
-              strokeWidth={2}
-              fill="url(#colorRevenue)"
-              dot={{ fill: '#6366f1', r: 4, strokeWidth: 2, stroke: '#ffffff' }}
-              activeDot={{ r: 6, stroke: '#ffffff', strokeWidth: 2, fill: '#6366f1' }}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        {!hasData ? (
+          <div className="flex flex-col items-center justify-center h-[320px] text-center">
+            <div className="rounded-full bg-muted p-6 mb-4">
+              <TrendingUp className="h-12 w-12 text-muted-foreground" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">Nessun Dato Disponibile</h3>
+            <p className="text-sm text-muted-foreground mb-4 max-w-sm">
+              Aggiungi pagamenti per visualizzare il grafico delle entrate mensili
+            </p>
+            <Link href={paymentsLink}>
+              <Button>
+                Aggiungi Pagamento
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-col items-center justify-center h-[320px] text-center">
+              <div className="rounded-full bg-muted p-6 mb-4">
+                <TrendingUp className="h-12 w-12 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Vista Grafico In Sviluppo</h3>
+              <p className="text-sm text-muted-foreground mb-2 max-w-sm">
+                Entrate mensili: <span className="font-bold text-primary">€{formatNumber(monthlyRevenue)}</span>
+              </p>
+              <p className="text-xs text-muted-foreground max-w-sm">
+                Il grafico dettagliato sarà disponibile a breve
+              </p>
+            </div>
+          </>
+        )}
         <div className="mt-4 pt-4 border-t">
           <Link href={paymentsLink}>
             <Button variant="outline" className="w-full group-hover:border-primary group-hover:text-primary transition-colors">
