@@ -93,7 +93,7 @@ const statsData = [
     value: demoStats.totalProperties.toString(),
     change: `↑${demoStats.propertiesChange}% dal mese scorso`,
     changeType: 'positive' as const,
-      icon: LayoutDashboard,
+    icon: LayoutDashboard,
     iconBg: 'bg-blue-100',
     iconColor: 'text-blue-600',
   },
@@ -165,11 +165,10 @@ export default function DemoDashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold mb-1">{stat.value}</div>
-                <p className={`text-xs ${
-                  stat.changeType === 'positive' ? 'text-green-600' : 
-                  stat.changeType === 'warning' ? 'text-red-600' : 
-                  'text-muted-foreground'
-                }`}>
+                <p className={`text-xs ${stat.changeType === 'positive' ? 'text-green-600' :
+                    stat.changeType === 'warning' ? 'text-red-600' :
+                      'text-muted-foreground'
+                  }`}>
                   {stat.change}
                 </p>
               </CardContent>
@@ -180,7 +179,7 @@ export default function DemoDashboardPage() {
 
       {/* Revenue Chart and Recent Activity */}
       <div className="grid gap-4 md:grid-cols-2">
-        <RevenueChart />
+        <RevenueChart monthlyRevenue={0} />
         <RecentActivity />
       </div>
 
